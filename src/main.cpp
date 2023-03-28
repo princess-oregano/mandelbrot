@@ -5,10 +5,9 @@
 int
 main()
 {
-        sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), 
+        sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
                                 "Mandelbrot");
 
-        // FPS.
         float fps = 0;
         sf::Clock clock;
         sf::Time previousTime = clock.getElapsedTime();
@@ -25,7 +24,7 @@ main()
                         }
                 }
 
-                gr_frame(&window, fps, &font); 
+                gr_frame(&window, fps, &font);
 
                 currentTime = clock.getElapsedTime();
                 fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());

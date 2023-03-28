@@ -9,10 +9,11 @@
 int
 opt_iter(int x, int y)
 {
-        float dx = (WINDOW_WIDTH / 2.f - x) / (WINDOW_WIDTH / 6.f);
-        float dx_0 = dx;
-        float dy = - (WINDOW_HEIGHT / 2.f - y) / (WINDOW_HEIGHT / 6.f); 
-        float dy_0 = dy;
+        float dx_0 = (WINDOW_WIDTH / 2.f - x) / (WINDOW_WIDTH / 6.f);
+        float dy_0 = - (WINDOW_HEIGHT / 2.f - y) / (WINDOW_HEIGHT / 6.f);
+        float dx = dx_0;
+        float dy = dy_0;
+
         int i = 0;
         for ( ; i < MAX_ITERATION; i++) {
                 float dx2 = dx * dx;
@@ -22,16 +23,15 @@ opt_iter(int x, int y)
                 dx = dx2 - dy2 + dx_0;
                 dy = 2 * xy + dy_0;
 
-                if (dx * dx + dy * dy > R_MAX_SQUARED) {
+                if (dx * dx + dy * dy > R_MAX_SQUARED)
                         break;
-                }
         }
 
         return i;
 }
 
 int *
-opt_coord()
+opt_set_pixels()
 {
         int *pixels = (int *) calloc(WINDOW_HEIGHT * WINDOW_WIDTH, sizeof(int));
 

@@ -21,7 +21,7 @@ gr_image(sf::Image *image)
 {
         assert(image);
 
-        int *pixels = opt_coord();
+        int *pixels = opt_set_pixels();
 
         for (unsigned int y = 0; y < WINDOW_HEIGHT; y++) {
                 for (unsigned int x = 0; x < WINDOW_WIDTH; x++) {
@@ -34,7 +34,7 @@ gr_image(sf::Image *image)
         free(pixels);
 }
 
-void 
+void
 gr_frame(sf::RenderWindow *window, float fps, sf::Font *font)
 {
         assert(window);
@@ -42,13 +42,13 @@ gr_frame(sf::RenderWindow *window, float fps, sf::Font *font)
         sf::Image image;
         image.create(WINDOW_WIDTH, WINDOW_HEIGHT);
         gr_image(&image);
-        
+
         // A long transformation of image to window, because
         // SFML works this way.
         sf::Texture texture;
-        texture.loadFromImage(image);  
+        texture.loadFromImage(image);
         sf::Sprite sprite;
-        sprite.setTexture(texture);    
+        sprite.setTexture(texture);
 
         sf::Text text;
         text.setFont(*font);
