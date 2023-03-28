@@ -5,7 +5,7 @@
 
 // Draws single frame.
 void 
-gr_frame(sf::RenderWindow *window);
+gr_frame(sf::RenderWindow *window, float fps, sf::Font *font);
 
 #endif // GRAPHICS_H
 

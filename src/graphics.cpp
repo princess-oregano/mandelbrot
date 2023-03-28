@@ -35,7 +35,7 @@ gr_image(sf::Image *image)
 }
 
 void 
-gr_frame(sf::RenderWindow *window)
+gr_frame(sf::RenderWindow *window, float fps, sf::Font *font)
 {
         assert(window);
 
@@ -50,8 +50,15 @@ gr_frame(sf::RenderWindow *window)
         sf::Sprite sprite;
         sprite.setTexture(texture);    
 
+        sf::Text text;
+        text.setFont(*font);
+        char fps_str[4] = {};
+        sprintf(fps_str, "%.0f", fps);
+        text.setString(fps_str);
+
         window->clear();
-        window->draw(sprite); 
+        window->draw(sprite);
+        window->draw(text);
         window->display();
 }
 

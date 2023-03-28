@@ -8,10 +8,14 @@ main()
         sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), 
                                 "Mandelbrot");
 
-        float fps;
+        // FPS.
+        float fps = 0;
         sf::Clock clock;
         sf::Time previousTime = clock.getElapsedTime();
         sf::Time currentTime;
+
+        sf::Font font;
+        font.loadFromFile("IBMPlexMono-Regular.ttf");
 
         while (window.isOpen()) {
                 sf::Event event;
@@ -21,11 +25,10 @@ main()
                         }
                 }
 
-                gr_frame(&window); 
+                gr_frame(&window, fps, &font); 
 
                 currentTime = clock.getElapsedTime();
                 fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
-                fprintf(stderr, "%.0f\n", fps);
                 previousTime = currentTime;
         }
 
