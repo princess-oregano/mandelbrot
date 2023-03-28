@@ -9,11 +9,10 @@
 int
 opt_iter(int x, int y)
 {
-        float dx = WINDOW_WIDTH - x; 
+        float dx = (WINDOW_WIDTH / 2.f - x) / (WINDOW_WIDTH / 6.f);
         float dx_0 = dx;
-        float dy = WINDOW_HEIGHT - y; 
+        float dy = - (WINDOW_HEIGHT / 2.f - y) / (WINDOW_HEIGHT / 6.f); 
         float dy_0 = dy;
-        fprintf(stderr, "dx = %lg, dy = %lg\n", dx, dy);
         int i = 0;
         for ( ; i < MAX_ITERATION; i++) {
                 float dx2 = dx * dx;
@@ -23,9 +22,9 @@ opt_iter(int x, int y)
                 dx = dx2 - dy2 + dx_0;
                 dy = 2 * xy + dy_0;
 
-                fprintf(stderr, "r2 = %.0f\n", dx*dx+dy*dy);
-                if (dx * dx + dy * dy > R_MAX_SQUARED) 
+                if (dx * dx + dy * dy > R_MAX_SQUARED) {
                         break;
+                }
         }
 
         return i;

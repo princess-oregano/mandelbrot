@@ -9,12 +9,10 @@ gr_set_color(sf::Color *color, int iter)
 {
         assert(color);
 
-        fprintf(stderr, "iter = %d\n", iter);
-
         color->r = iter * 8;
-        color->g = iter * 8;
-        color->b = iter * 8;
-        color->a = iter * 8;
+        color->g = 0;
+        color->b = iter % 2 * 64;
+        color->a = 255;
 }
 
 // Builds image of Mandelbrot figure.
