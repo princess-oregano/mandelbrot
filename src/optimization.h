@@ -8,7 +8,7 @@ const float R_MAX_SQUARED = 20;
 
 // Finds iteration of dropout (<MAX_ITERATION) for every pixel of the screen.
 int *
-opt_set_pixels(int x_0, int y_0);
+opt_set_pixels(int x_0, int y_0, int scale);
 
 #endif // OPT_H
 

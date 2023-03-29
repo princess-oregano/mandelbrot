@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#define DEF_KEY(K, NAME) KEY_##K,
 enum key_press_t {
         KEY_NON   = 0, 
         KEY_LEFT  = 1,
