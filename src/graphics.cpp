@@ -3,6 +3,9 @@
 #include "graphics.h"
 #include "optimization.h"
 
+static int x_0 = WINDOW_WIDTH;
+static int y_0 = WINDOW_HEIGHT;
+
 // Calculates pixel color based on iteration of dot dropout.
 static void
 gr_set_color(sf::Color *color, int iter)
@@ -21,7 +24,7 @@ gr_image(sf::Image *image)
 {
         assert(image);
 
-        int *pixels = opt_set_pixels();
+        int *pixels = opt_set_pixels(x_0, y_0);
 
         for (unsigned int y = 0; y < WINDOW_HEIGHT; y++) {
                 for (unsigned int x = 0; x < WINDOW_WIDTH; x++) {
@@ -34,10 +37,44 @@ gr_image(sf::Image *image)
         free(pixels);
 }
 
+static int
+gr_get_key()
+{
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+                return KEY_LEFT;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) 
+                return KEY_RIGHT;
+
+        return KEY_NON;
+}
+
+static void
+gr_chg_pos(int key, int *x_0, int *y_0)
+{
+        switch (key) {
+                case KEY_NON: 
+                        break;
+                case KEY_LEFT:
+                        *x_0 -= 10; 
+                        break;
+                case KEY_RIGHT: 
+                        *x_0 += 10; 
+                        break;
+                case KEY_UP: 
+                case KEY_DOWN: 
+                case KEY_ADD: 
+                case KEY_SUB: 
+                default:
+                        assert(0 && "Invalid key option.\n");
+        }
+}
+
 void
 gr_frame(sf::RenderWindow *window, float fps, sf::Font *font)
 {
         assert(window);
+
+        gr_chg_pos(gr_get_key(), &x_0, &y_0);
 
         sf::Image image;
         image.create(WINDOW_WIDTH, WINDOW_HEIGHT);
