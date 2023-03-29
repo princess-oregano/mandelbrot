@@ -16,6 +16,8 @@ main()
         sf::Font font;
         font.loadFromFile("IBMPlexMono-Regular.ttf");
 
+        int *pixels = (int *) calloc(WINDOW_HEIGHT * WINDOW_WIDTH, sizeof(int));
+
         while (window.isOpen()) {
                 sf::Event event;
                 while (window.pollEvent(event)) {
@@ -24,13 +26,14 @@ main()
                         }
                 }
 
-                gr_frame(&window, fps, &font);
+                gr_frame(&window, pixels, fps, &font);
 
                 currentTime = clock.getElapsedTime();
                 fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
                 previousTime = currentTime;
         }
-
+        
+        free(pixels);
 
         return 0;
 }

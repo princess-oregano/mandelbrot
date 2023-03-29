@@ -7,7 +7,7 @@ TARGET := mandelbrot
 
 CXX := g++
 LDFLAGS := -lsfml-graphics -lsfml-window -lsfml-system
-CXXFLAGS := -O3 -g -std=c++14 -fmax-errors=100 -Wall -Wextra                  \
+CXXFLAGS := -O3 -mavx -mavx2 -g -std=c++14 -fmax-errors=100 -Wall -Wextra     \
 	    -Weffc++ -Waggressive-loop-optimizations -Wc++0x-compat           \
 	    -Wc++11-compat -Wc++14-compat -Wcast-align -Wcast-qual            \
 	    -Wchar-subscripts -Wconditionally-supported -Wconversion          \

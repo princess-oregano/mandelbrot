@@ -16,7 +16,7 @@ enum key_press_t {
 
 // Draws single frame.
 void
-gr_frame(sf::RenderWindow *window, float fps, sf::Font *font);
+gr_frame(sf::RenderWindow *window, int *pixels, float fps, sf::Font *font);
 
 #endif // GRAPHICS_H
 

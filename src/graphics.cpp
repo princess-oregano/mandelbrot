@@ -17,11 +17,11 @@ gr_set_color(sf::Color *color, int iter)
 
 // Builds image of Mandelbrot figure.
 static void
-gr_image(sf::Image *image, int x_0, int y_0, float scale)
+gr_image(sf::Image *image, int *pixels, int x_0, int y_0, float scale)
 {
         assert(image);
 
-        int *pixels = opt_set_pixels(x_0, y_0, scale);
+        opt_set_pix_avx(pixels, x_0, y_0, scale);
 
         for (unsigned int y = 0; y < WINDOW_HEIGHT; y++) {
                 for (unsigned int x = 0; x < WINDOW_WIDTH; x++) {
@@ -30,8 +30,6 @@ gr_image(sf::Image *image, int x_0, int y_0, float scale)
                         image->setPixel(x, y, color);
                 }
         }
-
-        free(pixels);
 }
 
 static int
@@ -83,7 +81,7 @@ gr_chg_pos(int key, int *x_0, int *y_0, float *scale)
 }
 
 void
-gr_frame(sf::RenderWindow *window, float fps, sf::Font *font)
+gr_frame(sf::RenderWindow *window, int *pixels, float fps, sf::Font *font)
 {
         assert(window);
 
@@ -96,7 +94,7 @@ gr_frame(sf::RenderWindow *window, float fps, sf::Font *font)
         fprintf(stderr, "%f\n", scale);
         sf::Image image;
         image.create(WINDOW_WIDTH, WINDOW_HEIGHT);
-        gr_image(&image, x_0, y_0, scale);
+        gr_image(&image, pixels, x_0, y_0, scale);
 
         // A long transformation of image to window, because
         // SFML works this way.
