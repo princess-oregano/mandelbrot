@@ -26,7 +26,7 @@ gr_image(sf::Image *image, int x_0, int y_0, float scale)
         for (unsigned int y = 0; y < WINDOW_HEIGHT; y++) {
                 for (unsigned int x = 0; x < WINDOW_WIDTH; x++) {
                         sf::Color color;
-                        gr_set_color(&color, pixels[x + WINDOW_WIDTH * y]);
+                        gr_set_color(&color, pixels[x + (int) WINDOW_WIDTH * y]);
                         image->setPixel(x, y, color);
                 }
         }
@@ -72,10 +72,10 @@ gr_chg_pos(int key, int *x_0, int *y_0, float *scale)
                         *y_0 -= 10;
                         break;
                 case KEY_ADD:
-                        *scale -= 0.01;
+                        *scale *= 0.9;
                         break;
                 case KEY_SUB: 
-                        *scale += 0.01;
+                        *scale /= 0.9;
                         break;
                 default:
                         assert(0 && "Invalid key option.\n");
@@ -87,8 +87,8 @@ gr_frame(sf::RenderWindow *window, float fps, sf::Font *font)
 {
         assert(window);
 
-        static int x_0 = WINDOW_WIDTH;
-        static int y_0 = WINDOW_HEIGHT;
+        static int x_0 = WINDOW_WIDTH / 2.f;
+        static int y_0 = WINDOW_HEIGHT / 2.f;
         static float scale = 6.f;
 
         gr_chg_pos(gr_get_key(), &x_0, &y_0, &scale);
