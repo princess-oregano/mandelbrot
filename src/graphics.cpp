@@ -91,7 +91,6 @@ gr_frame(sf::RenderWindow *window, int *pixels, float fps, sf::Font *font)
 
         gr_chg_pos(gr_get_key(), &x_0, &y_0, &scale);
 
-        fprintf(stderr, "%f\n", scale);
         sf::Image image;
         image.create(WINDOW_WIDTH, WINDOW_HEIGHT);
         gr_image(&image, pixels, x_0, y_0, scale);

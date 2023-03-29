@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <immintrin.h>
 #include <assert.h>
 #include "optimization.h"
@@ -58,17 +59,16 @@ opt_set_pix_avx(int *pixels, float x_0, float y_0, float scale)
         const __m256 avx_r2_lim = _mm256_set1_ps(R_MAX_SQUARED);
 
         float rel_scale = WINDOW_HEIGHT / scale;
-        x_0 /= -WINDOW_WIDTH;
 
         // Calculate relative scale.
         for (int y = 0; y < WINDOW_HEIGHT; y++) {
-                __m256 avx_y_0 = _mm256_set1_ps(y_0);
+                __m256 avx_y_0 = _mm256_set1_ps((y_0 - y) / rel_scale);
                 for (int x = 0; x < WINDOW_WIDTH; x += 8) {
                         // (-x_0 + x) / rel_scale;
-                        const float dx = x / rel_scale;
-                        const __m256 avx_dx = _mm256_set_ps(7 * dx, 6 * dx, 5 * dx, 4 * dx,
-                                                            3 * dx, 2 * dx, 1 * dx, 0 * dx);
-                        __m256 avx_x_0 = _mm256_add_ps(_mm256_set1_ps(x_0), avx_dx);
+                        float dx = 1 / rel_scale;
+                        __m256 avx_dx = _mm256_set_ps(7 * dx, 6 * dx, 5 * dx, 4 * dx,
+                                                      3 * dx, 2 * dx, 1 * dx, 0 * dx);
+                        __m256 avx_x_0 = _mm256_add_ps(_mm256_set1_ps((x - x_0) / rel_scale), avx_dx);
 
                         __m256 avx_x = avx_x_0;
                         __m256 avx_y = avx_y_0;
@@ -87,19 +87,23 @@ opt_set_pix_avx(int *pixels, float x_0, float y_0, float scale)
 
                                 __m256 cmp = _mm256_cmp_ps(avx_r2, avx_r2_lim, _CMP_LT_OQ);
 
-                                 int mask = _mm256_movemask_ps(cmp);
+                                int mask = _mm256_movemask_ps(cmp);
 
-                                 if(!mask)
+                                if(!mask) {
                                         break;
+                                }
 
-                                avx_i = _mm256_sub_epi64(avx_i, _mm256_castps_si256(cmp));
+                                avx_i = _mm256_sub_epi32(avx_i, _mm256_castps_si256(cmp));
 
                                 avx_x = _mm256_add_ps(_mm256_sub_ps(avx_x2, avx_y2), avx_x_0);
                                 avx_y = _mm256_add_ps(avx_y_0, _mm256_add_ps(avx_xy, avx_xy));
                         }
 
-                        memcpy(pixels, &avx_i, 8 * sizeof(int));
-                        pixels += 8;
+                        for (int i = 0; i < 8; i++) {
+                                uint32_t *ptr_iter = (uint32_t *) &avx_i;
+
+                                pixels[x + i + y * (int) WINDOW_WIDTH] = *(ptr_iter + i);
+                        }
                 }
         }
 }
