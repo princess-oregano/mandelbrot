@@ -9,9 +9,9 @@ gr_set_color(sf::Color *color, int iter)
 {
         assert(color);
 
-        color->r = iter * 8;
+        color->r = (sf::Uint8) iter * 8;
         color->g = 0;
-        color->b = iter % 4 * 32;
+        color->b = (sf::Uint8) iter % 4 * 32;
         color->a = 255;
 }
 
@@ -20,53 +20,62 @@ static void
 gr_image(sf::Image *image, int *pixels, float x_0, float y_0, float scale)
 {
         assert(image);
+        assert(pixels);
 
         opt_set_pix_avx(pixels, x_0, y_0, scale);
 
-        for (unsigned int y = 0; y < WINDOW_HEIGHT; y++) {
-                for (unsigned int x = 0; x < WINDOW_WIDTH; x++) {
+        for (float y = 0; y < WINDOW_HEIGHT; y++) {
+                for (float x = 0; x < WINDOW_WIDTH; x++) {
                         sf::Color color;
-                        gr_set_color(&color, pixels[x + (int) WINDOW_WIDTH * y]);
-                        image->setPixel(x, y, color);
+                        int elem = (int) x + (int) WINDOW_WIDTH * (int) y;
+                        gr_set_color(&color, pixels[elem]);
+                        image->setPixel((uint32_t) x, (uint32_t) y, color);
                 }
         }
 }
 
+// Catches key and returns value from key_press_t.
+// (Could code-generate, BUT ::+<KEY> is not valid token.)
 static int
 gr_get_key()
 {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
                 return KEY_LEFT;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
                 return KEY_RIGHT;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
                 return KEY_UP;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
                 return KEY_DOWN;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)) 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
                 return KEY_ADD;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract)) 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
                 return KEY_SUB;
 
         return KEY_NON;
 }
 
+// Changes position of figure center and scale.
 static void
 gr_chg_pos(int key, float *x_0, float *y_0, float *scale)
 {
+        assert(x_0);
+        assert(y_0);
+        assert(scale);
+
         switch (key) {
-                case KEY_NON: 
+                case KEY_NON:
                         break;
                 case KEY_LEFT:
                         *x_0 += AXIS_OFFSET;
                         break;
-                case KEY_RIGHT: 
-                        *x_0 -= AXIS_OFFSET; 
+                case KEY_RIGHT:
+                        *x_0 -= AXIS_OFFSET;
                         break;
-                case KEY_UP: 
+                case KEY_UP:
                         *y_0 += AXIS_OFFSET;
                         break;
-                case KEY_DOWN: 
+                case KEY_DOWN:
                         *y_0 -= AXIS_OFFSET;
                         break;
                 case KEY_ADD:
@@ -74,7 +83,7 @@ gr_chg_pos(int key, float *x_0, float *y_0, float *scale)
                         *x_0 = WINDOW_HEIGHT / 2 + (*x_0 - WINDOW_WIDTH / 2) / SCALE_OFFSET;
                         *y_0 = WINDOW_HEIGHT / 2 + (*y_0 - WINDOW_WIDTH / 2) / SCALE_OFFSET;
                         break;
-                case KEY_SUB: 
+                case KEY_SUB:
                         *scale /= SCALE_OFFSET;
                         *x_0 = WINDOW_HEIGHT / 2 + (*x_0 - WINDOW_WIDTH / 2) * SCALE_OFFSET;
                         *y_0 = WINDOW_HEIGHT / 2 + (*y_0 - WINDOW_WIDTH / 2) * SCALE_OFFSET;
@@ -89,6 +98,9 @@ gr_frame(sf::RenderWindow *window, int *pixels, float *x_0, float *y_0,
         float *scale, float fps, sf::Font *font)
 {
         assert(window);
+        assert(pixels);
+        assert(x_0 && y_0 && scale);
+        assert(font);
 
         gr_chg_pos(gr_get_key(), x_0, y_0, scale);
 

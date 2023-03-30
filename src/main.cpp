@@ -21,7 +21,7 @@ main()
         float x_0 = WINDOW_WIDTH / 2.f;
         float y_0 = x_0;
         float scale = 6.f / WINDOW_WIDTH;
-        
+
         while (window.isOpen()) {
                 sf::Event event;
                 while (window.pollEvent(event)) {
@@ -36,7 +36,7 @@ main()
                 fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
                 previousTime = currentTime;
         }
-        
+
         free(pixels);
 
         return 0;
