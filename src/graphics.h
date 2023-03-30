@@ -3,9 +3,11 @@
 
 #include <SFML/Graphics.hpp>
 
-#define DEF_KEY(K, NAME) KEY_##K,
+const float  AXIS_OFFSET = 20.f;
+const float SCALE_OFFSET = 0.9f;
+
 enum key_press_t {
-        KEY_NON   = 0, 
+        KEY_NON   = 0,
         KEY_LEFT  = 1,
         KEY_RIGHT = 2,
         KEY_UP    = 3,
@@ -16,7 +18,8 @@ enum key_press_t {
 
 // Draws single frame.
 void
-gr_frame(sf::RenderWindow *window, int *pixels, float fps, sf::Font *font);
+gr_frame(sf::RenderWindow *window, int *pixels, float *x_0, float *y_0,
+        float *scale, float fps, sf::Font *font);
 
 #endif // GRAPHICS_H
 

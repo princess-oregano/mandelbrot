@@ -18,6 +18,10 @@ main()
 
         int *pixels = (int *) calloc(WINDOW_HEIGHT * WINDOW_WIDTH, sizeof(int));
 
+        float x_0 = WINDOW_WIDTH / 2.f;
+        float y_0 = x_0;
+        float scale = 6.f / WINDOW_WIDTH;
+        
         while (window.isOpen()) {
                 sf::Event event;
                 while (window.pollEvent(event)) {
@@ -26,7 +30,7 @@ main()
                         }
                 }
 
-                gr_frame(&window, pixels, fps, &font);
+                gr_frame(&window, pixels, &x_0, &y_0, &scale, fps, &font);
 
                 currentTime = clock.getElapsedTime();
                 fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());

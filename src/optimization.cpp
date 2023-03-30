@@ -10,7 +10,7 @@
 // ---------------------------NO_OPTIMIZATION----------------------------------
 
 // Calculates iteration of  dropout.
-int
+static int
 opt_iter(int x, int y, int x_0, int y_0, float scale)
 {
         float dx_0 = (-x_0 + x) / (WINDOW_WIDTH / scale);
@@ -52,23 +52,24 @@ opt_set_pixels(int *pixels, int x_0, int y_0, float scale)
 
 
 void
-opt_set_pix_avx(int *pixels, float x_0, float y_0, float scale)
+opt_set_pix_avx(int *pixels, float x_c, float y_c, float scale)
 {       
         assert(pixels);
 
         const __m256 avx_r2_lim = _mm256_set1_ps(R_MAX_SQUARED);
 
-        float rel_scale = WINDOW_HEIGHT / scale;
+        float dx = scale;
+        __m256 avx_dx = _mm256_set_ps(7 * dx, 6 * dx, 5 * dx, 4 * dx,
+                                      3 * dx, 2 * dx, 1 * dx, 0 * dx);
+        // Convert pixel coordinates to conventional.
+        y_c *= scale;
+        x_c *= scale;
 
-        // Calculate relative scale.
         for (int y = 0; y < WINDOW_HEIGHT; y++) {
-                __m256 avx_y_0 = _mm256_set1_ps((y_0 - y) / rel_scale);
+                __m256 avx_y_0 = _mm256_set1_ps(y_c - y * scale);
                 for (int x = 0; x < WINDOW_WIDTH; x += 8) {
                         // (-x_0 + x) / rel_scale;
-                        float dx = 1 / rel_scale;
-                        __m256 avx_dx = _mm256_set_ps(7 * dx, 6 * dx, 5 * dx, 4 * dx,
-                                                      3 * dx, 2 * dx, 1 * dx, 0 * dx);
-                        __m256 avx_x_0 = _mm256_add_ps(_mm256_set1_ps((x - x_0) / rel_scale), avx_dx);
+                        __m256 avx_x_0 = _mm256_add_ps(_mm256_set1_ps(x * scale - x_c), avx_dx);
 
                         __m256 avx_x = avx_x_0;
                         __m256 avx_y = avx_y_0;

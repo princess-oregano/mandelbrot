@@ -11,13 +11,13 @@ gr_set_color(sf::Color *color, int iter)
 
         color->r = iter * 8;
         color->g = 0;
-        color->b = iter % 2 * 64;
+        color->b = iter % 4 * 32;
         color->a = 255;
 }
 
 // Builds image of Mandelbrot figure.
 static void
-gr_image(sf::Image *image, int *pixels, int x_0, int y_0, float scale)
+gr_image(sf::Image *image, int *pixels, float x_0, float y_0, float scale)
 {
         assert(image);
 
@@ -52,28 +52,32 @@ gr_get_key()
 }
 
 static void
-gr_chg_pos(int key, int *x_0, int *y_0, float *scale)
+gr_chg_pos(int key, float *x_0, float *y_0, float *scale)
 {
         switch (key) {
                 case KEY_NON: 
                         break;
                 case KEY_LEFT:
-                        *x_0 += 10; 
+                        *x_0 += AXIS_OFFSET;
                         break;
                 case KEY_RIGHT: 
-                        *x_0 -= 10; 
+                        *x_0 -= AXIS_OFFSET; 
                         break;
                 case KEY_UP: 
-                        *y_0 += 10;
+                        *y_0 += AXIS_OFFSET;
                         break;
                 case KEY_DOWN: 
-                        *y_0 -= 10;
+                        *y_0 -= AXIS_OFFSET;
                         break;
                 case KEY_ADD:
-                        *scale *= 0.9;
+                        *scale *= SCALE_OFFSET;
+                        *x_0 = WINDOW_HEIGHT / 2 + (*x_0 - WINDOW_WIDTH / 2) / SCALE_OFFSET;
+                        *y_0 = WINDOW_HEIGHT / 2 + (*y_0 - WINDOW_WIDTH / 2) / SCALE_OFFSET;
                         break;
                 case KEY_SUB: 
-                        *scale /= 0.9;
+                        *scale /= SCALE_OFFSET;
+                        *x_0 = WINDOW_HEIGHT / 2 + (*x_0 - WINDOW_WIDTH / 2) * SCALE_OFFSET;
+                        *y_0 = WINDOW_HEIGHT / 2 + (*y_0 - WINDOW_WIDTH / 2) * SCALE_OFFSET;
                         break;
                 default:
                         assert(0 && "Invalid key option.\n");
@@ -81,19 +85,16 @@ gr_chg_pos(int key, int *x_0, int *y_0, float *scale)
 }
 
 void
-gr_frame(sf::RenderWindow *window, int *pixels, float fps, sf::Font *font)
+gr_frame(sf::RenderWindow *window, int *pixels, float *x_0, float *y_0,
+        float *scale, float fps, sf::Font *font)
 {
         assert(window);
 
-        static int x_0 = WINDOW_WIDTH / 2.f;
-        static int y_0 = WINDOW_HEIGHT / 2.f;
-        static float scale = 6.f;
-
-        gr_chg_pos(gr_get_key(), &x_0, &y_0, &scale);
+        gr_chg_pos(gr_get_key(), x_0, y_0, scale);
 
         sf::Image image;
         image.create(WINDOW_WIDTH, WINDOW_HEIGHT);
-        gr_image(&image, pixels, x_0, y_0, scale);
+        gr_image(&image, pixels, *x_0, *y_0, *scale);
 
         // A long transformation of image to window, because
         // SFML works this way.
