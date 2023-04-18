@@ -46,8 +46,8 @@ Mandelbrot has simple interface:
 ## Perfomance
 
 Without AVX optimization:
-<img src = "res/avx_on.png">
+<img src = "res/avx_off.png">
 
 With AVX optimization:
-<img src = "res/avx_off.png">
+<img src = "res/avx_on.png">
 
