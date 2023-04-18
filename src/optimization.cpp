@@ -35,7 +35,7 @@ opt_iter(float x, float y, float x_0, float y_0, float scale)
 }
 
 int *
-opt_set_pixels(int *pixels, float x_0, float y_0, float scale)
+opt_set_pix(int *pixels, float x_0, float y_0, float scale)
 {
         assert(pixels);
 
