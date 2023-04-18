@@ -1,6 +1,6 @@
 # mandelbrot
 
-A little demonstration of 
+A little demonstration of SIMD optimizations.
 
 ## Table of contents
 * [Prerequisites](#prerequisites)
