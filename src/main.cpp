@@ -17,6 +17,8 @@ main()
         font.loadFromFile("IBMPlexMono-Regular.ttf");
 
         int *pixels = (int *) calloc(WINDOW_HEIGHT * WINDOW_WIDTH, sizeof(int));
+        if (pixels == nullptr)
+                return 1;
 
         float x_0 = WINDOW_WIDTH / 2.f;
         float y_0 = x_0;

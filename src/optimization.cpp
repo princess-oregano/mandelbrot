@@ -10,11 +10,11 @@
 // ---------------------------NO_OPTIMIZATION----------------------------------
 
 // Calculates iteration of  dropout.
-static int
+static int inline
 opt_iter(float x, float y, float x_0, float y_0, float scale)
 {
-        float dx_0 = (-x_0 + x) / (WINDOW_WIDTH / scale);
-        float dy_0 = ( y_0 - y) / (WINDOW_HEIGHT / scale);
+        float dx_0 = (x - x_0) * scale;
+        float dy_0 = (y_0 - y) * scale;
         float dx = dx_0;
         float dy = dy_0;
 
@@ -70,7 +70,7 @@ opt_set_pix_avx(int *pixels, float x_c, float y_c, float scale)
                 // y_0 = (y_c - y) * scale;
                 __m256 avx_y_0 = _mm256_set1_ps(y_c - y * scale);
                 for (float x = 0; x < WINDOW_WIDTH; x += 8) {
-                        // x_0 = (x_c - x) * scale;
+                        // x_0 = (x - x_c) * scale;
                         __m256 avx_x_0 = _mm256_add_ps(_mm256_set1_ps(x * scale - x_c), avx_dx);
 
                         __m256 avx_x = avx_x_0;

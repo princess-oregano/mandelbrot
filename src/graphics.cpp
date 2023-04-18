@@ -22,11 +22,11 @@ gr_image(sf::Image *image, int *pixels, float x_0, float y_0, float scale)
         assert(image);
         assert(pixels);
 
-        opt_set_pix_avx(pixels, x_0, y_0, scale);
+        opt_set_pixels(pixels, x_0, y_0, scale);
 
+        sf::Color color;
         for (float y = 0; y < WINDOW_HEIGHT; y++) {
                 for (float x = 0; x < WINDOW_WIDTH; x++) {
-                        sf::Color color;
                         int elem = (int) x + (int) WINDOW_WIDTH * (int) y;
                         gr_set_color(&color, pixels[elem]);
                         image->setPixel((uint32_t) x, (uint32_t) y, color);
